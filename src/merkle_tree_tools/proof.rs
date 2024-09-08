@@ -1,6 +1,9 @@
 use super::build_tree::MerkleTree;
 use crate::poseidon::sponge::PoseidonSponge;
-use halo2curves::bn256::Fr;
+
+use ark_bn254::Fr;
+use ark_ff::Zero;
+
 use std::collections::HashMap;
 
 #[derive(Debug)]

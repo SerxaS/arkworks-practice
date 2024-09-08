@@ -5,8 +5,10 @@ mod tests {
         build_tree::MerkleTree,
         proof::{self, Proof},
     };
-    use halo2curves::{bn256::Fr, ff::Field};
-    use rand::thread_rng;
+
+    use ark_bn254::Fr;
+    use ark_ff::Zero;
+    use ark_std::UniformRand;
 
     #[test]
     fn full_tree() {
@@ -18,16 +20,16 @@ mod tests {
         const L: usize = 4;
         assert!(H + 1 == L, "Level must be 1 more than height!");
 
-        let rng = thread_rng();
+        let mut rng = ark_std::test_rng();
         let mut leaves = vec![Fr::zero(); number_of_leaf];
 
         for i in 0..number_of_leaf {
-            leaves[i] = Fr::random(rng.clone());
+            leaves[i] = Fr::rand(&mut rng);
         }
 
         let mut hashed_leaves = MerkleTree::hash_leaves(leaves);
         // Random leaf for proof. Inserts a value to the given index.
-        let value_for_proof = vec![Fr::random(rng)];
+        let value_for_proof = vec![Fr::rand(&mut rng)];
         let value_for_proof_hash = MerkleTree::hash_leaves(value_for_proof);
         let value_for_proof_idx = 2;
         hashed_leaves.insert(value_for_proof_idx, value_for_proof_hash[0]);
@@ -54,16 +56,16 @@ mod tests {
         const L: usize = 6;
         assert!(H < L, "Level must be 1 more than height!");
 
-        let rng = thread_rng();
+        let mut rng = ark_std::test_rng();
         let mut leaves = vec![Fr::zero(); number_of_leaf];
 
         for i in 0..number_of_leaf {
-            leaves[i] = Fr::random(rng.clone());
+            leaves[i] = Fr::rand(&mut rng);
         }
 
         let mut hashed_leaves = MerkleTree::hash_leaves(leaves);
         // Random leaf for proof. Inserts a value to the given index.
-        let value_for_proof = vec![Fr::random(rng)];
+        let value_for_proof = vec![Fr::rand(&mut rng)];
         let value_for_proof_hash = MerkleTree::hash_leaves(value_for_proof);
         let value_for_proof_idx = 2;
         hashed_leaves.insert(value_for_proof_idx, value_for_proof_hash[0]);
@@ -91,11 +93,11 @@ mod tests {
         // number of leaves is height of tree(H).
         const H: usize = 3;
 
-        let rng = thread_rng();
+        let mut rng = ark_std::test_rng();
         let mut leaves = vec![Fr::zero(); number_of_leaf];
 
         for i in 0..number_of_leaf {
-            leaves[i] = Fr::random(rng.clone());
+            leaves[i] = Fr::rand(&mut rng);
         }
         // If tree is empty fill layer with zero.
         loop {
